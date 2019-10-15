@@ -22,8 +22,19 @@
  */
 package com.comphenix.wrappit.test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.reflect.FieldUtils;
+import com.comphenix.protocol.utility.Constants;
+import com.comphenix.protocol.utility.MinecraftReflection;
+import com.comphenix.protocol.utility.MinecraftVersion;
+import com.comphenix.wrappit.Wrappit;
+import com.comphenix.wrappit.io.Closer;
+import net.minecraft.server.v1_14_R1.DispenserRegistry;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.inventory.ItemFactory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -36,21 +47,8 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import net.minecraft.server.v1_9_R1.DispenserRegistry;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.inventory.ItemFactory;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.reflect.FieldUtils;
-import com.comphenix.protocol.utility.Constants;
-import com.comphenix.protocol.utility.MinecraftReflection;
-import com.comphenix.protocol.utility.MinecraftVersion;
-import com.comphenix.wrappit.Wrappit;
-import com.comphenix.wrappit.io.Closer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author dmulloy2
@@ -173,6 +171,7 @@ public class WrapperTest {
 
 			initPackage();
 
+			DispenserRegistry.init();
 			DispenserRegistry.c(); // Basically registers everything
 
 			// Mock the server object

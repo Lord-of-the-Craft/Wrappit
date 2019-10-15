@@ -22,9 +22,6 @@
  */
 package com.comphenix.wrappit;
 
-import java.io.File;
-import java.util.Arrays;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.utility.Constants;
 import com.comphenix.protocol.utility.MinecraftReflection;
@@ -33,6 +30,9 @@ import com.comphenix.wrappit.minecraft.CodePacketReader;
 import com.comphenix.wrappit.test.WrapperTest;
 import com.comphenix.wrappit.wiki.WikiPacketReader;
 import com.google.common.base.CaseFormat;
+
+import java.io.File;
+import java.util.Arrays;
 
 public class Wrappit {
 	private static File wikiPage = null;
@@ -60,7 +60,7 @@ public class Wrappit {
 				System.exit(2);
 			}
 		}*/
-		test = true;
+		test = false;
 		packetWrapper = new File("C:/Users/Dan/Desktop/Eclipse/eclipse/PacketWrapper/PacketWrapper/target/PacketWrapper.jar");
 
 		try {
@@ -82,7 +82,7 @@ public class Wrappit {
 		MinecraftReflection.setMinecraftPackage(Constants.NMS, Constants.OBC);
 
 		CodePacketReader codeReader = new CodePacketReader();
-		WikiPacketReader wikiReader = new WikiPacketReader(wikiPage);
+		WikiPacketReader wikiReader = new WikiPacketReader();
 		WrapperGenerator generator = new WrapperGenerator(codeReader, wikiReader);
 
 		File folder = new File("Packets");

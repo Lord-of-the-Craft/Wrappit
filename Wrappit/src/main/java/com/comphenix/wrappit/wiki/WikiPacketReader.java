@@ -22,6 +22,14 @@
  */
 package com.comphenix.wrappit.wiki;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.PacketType.Protocol;
+import com.comphenix.protocol.PacketType.Sender;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,22 +38,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.PacketType.Protocol;
-import com.comphenix.protocol.PacketType.Sender;
-
 /**
  * Retrieve valuable information from the Minecraft Protocol Wiki.
  * 
  * @author Kristian
  */
 public class WikiPacketReader {
-	public static final String STANDARD_URL = "http://www.wiki.vg/Protocol";
+	public static final String STANDARD_URL = "https://wiki.vg/Protocol";
 	
 	// Stored packet information
 	private Map<PacketType, WikiPacketInfo> packets;

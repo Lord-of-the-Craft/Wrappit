@@ -22,28 +22,6 @@
  */
 package com.comphenix.wrappit;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.security.PublicKey;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import net.minecraft.server.v1_9_R1.Block;
-import net.minecraft.server.v1_9_R1.BlockPosition;
-import net.minecraft.server.v1_9_R1.ChunkCoordIntPair;
-import net.minecraft.server.v1_9_R1.DataWatcher;
-import net.minecraft.server.v1_9_R1.IChatBaseComponent;
-import net.minecraft.server.v1_9_R1.ItemStack;
-import net.minecraft.server.v1_9_R1.NBTTagCompound;
-import net.minecraft.server.v1_9_R1.ServerPing;
-import net.minecraft.server.v1_9_R1.Vec3D;
-import net.minecraft.server.v1_9_R1.WorldType;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.wrappit.minecraft.CodePacketInfo;
 import com.comphenix.wrappit.minecraft.CodePacketReader;
@@ -53,6 +31,33 @@ import com.comphenix.wrappit.wiki.WikiPacketField;
 import com.comphenix.wrappit.wiki.WikiPacketInfo;
 import com.comphenix.wrappit.wiki.WikiPacketReader;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.server.v1_14_R1.Block;
+import net.minecraft.server.v1_14_R1.BlockPosition;
+import net.minecraft.server.v1_14_R1.ChunkCoordIntPair;
+import net.minecraft.server.v1_14_R1.DataWatcher;
+import net.minecraft.server.v1_14_R1.DimensionManager;
+import net.minecraft.server.v1_14_R1.EntityTypes;
+import net.minecraft.server.v1_14_R1.IChatBaseComponent;
+import net.minecraft.server.v1_14_R1.ItemStack;
+import net.minecraft.server.v1_14_R1.MinecraftKey;
+import net.minecraft.server.v1_14_R1.NBTTagCompound;
+import net.minecraft.server.v1_14_R1.ParticleParam;
+import net.minecraft.server.v1_14_R1.ServerPing;
+import net.minecraft.server.v1_14_R1.SoundEffect;
+import net.minecraft.server.v1_14_R1.Vec3D;
+import net.minecraft.server.v1_14_R1.WorldType;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.security.PublicKey;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class WrapperGenerator {
 	public enum Modifiers {
@@ -63,9 +68,12 @@ public class WrapperGenerator {
 		BYTES(byte.class,                             "byte",                   "getBytes()"),
 		CHAT_BASE_COMPONENT(IChatBaseComponent.class, "WrappedChatComponent",   "getChatComponents()"),
 		CHUNK_COORD_INT_PAIR(ChunkCoordIntPair.class, "ChunkCoordIntPair",      "getChunkCoordIntPairs()"),
+		COLLECTION(Collection.class,                  "Collection<?>",          "getWatchableCollectionModifier()"),
 		COMPONENT_ARRAY(IChatBaseComponent[].class,   "WrappedChatComponent[]", "getChatComponentArrays()"),
 		DATA_WATCHER_MODIFIER(DataWatcher.class,      "WrappedDataWatcher",     "getDataWatcherModifier()"),
+		DIMENSIONS(DimensionManager.class,            "DimensionManager",       "getDimensions()"),
 		DOUBLES(double.class,                         "double",                 "getDoubles()"),
+		ENTITY_TYPES(EntityTypes.class,               "EntityTypes<?>",         "getEntityTypeModifier()"),
 		ENUMS(Enum.class,                             "Enum<?>",                "getSpecificModifier(Enum.class)"),
 		FLOATS(float.class,                           "float",                  "getFloat()"),
 		GAME_PROFILE(GameProfile.class,               "WrappedGameProfile",     "getGameProfiles()"),
@@ -75,12 +83,15 @@ public class WrapperGenerator {
 		ITEM_MODIFIER(ItemStack.class,                "ItemStack",              "getItemModifier()"),
 		LONGS(long.class,                             "long",                   "getLongs()"),
 		MAP(Map.class,                                "Map<?,?>",               "getSpecificModifier(Map.class)"),
+		MINECRAFT_KEYS(MinecraftKey.class,            "MinecraftKey",           "getMinecraftKeys()"),
 		NBT_MODIFIER(NBTTagCompound.class,            "NbtBase<?>",             "getNbtModifier()"),
+		PARTICLES(ParticleParam.class,                "ParticleParam<?>",       "getNewParticles()"),
 		POSITION_LIST(List.class,                     "List<BlockPosition>",    "getBlockPositionCollectionModifier()"),
 		SET(Set.class,                                "Set<?>",                 "getSpecificModifier(Set.class)"),
 		PUBLIC_KEY_MODIFIER(PublicKey.class,          "PublicKey",              "getSpecificModifier(PublicKey.class)"),
 		SERVER_PING(ServerPing.class,                 "WrappedServerPing",      "getServerPings()"),
 		SHORTS(short.class,                           "short",                  "getShorts()"),
+		SOUND_EFFECT(SoundEffect.class,               "SoundEffect",            "getSoundEffects()"),
 		STRING_ARRAYS(String[].class,                 "String[]",               "getStringArrays()"),
 		STRINGS(String.class,                         "String",                 "getStrings()"),
 		UUID(UUID.class,                              "UUID",                   "getSpecificModifier(UUID.class)"),
@@ -261,6 +272,7 @@ public class WrapperGenerator {
 				.replace("EntityId", "EntityID")
 				.replace("JsonData", "Message");
 	}
+
 
 	private String getFieldType(WikiPacketField field) {
 		// Most are primitive
